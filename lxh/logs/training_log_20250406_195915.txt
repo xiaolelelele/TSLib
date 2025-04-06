@@ -1,0 +1,6 @@
+
+=== Training Parameters (20250406_195915) ===
+delta: 0.4650209812571551
+epochs: 61
+batch_size: 4
+timestamp: 2025-04-06 19:59:15
