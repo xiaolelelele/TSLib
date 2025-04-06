@@ -87,3 +87,56 @@ class mase_loss(nn.Module):
         masep = t.mean(t.abs(insample[:, freq:] - insample[:, :-freq]), dim=1)
         masked_masep_inv = divide_no_nan(mask, masep[:, None])
         return t.mean(t.abs(target - forecast) * masked_masep_inv)
+
+
+class AlphaMixLoss(nn.Module):
+    def __init__(self, alpha: float = 0.5, clip_value: float = 50.0, eps: float = 1e-8):
+        super(AlphaMixLoss, self).__init__()
+        self.alpha = alpha
+        self.clip_value = clip_value  # 梯度截断阈值
+        self.eps = eps
+
+    def safe_log_cosh(self, diff: t.Tensor) -> t.Tensor:
+        """
+        数值稳定的 log_cosh 实现：
+        - 当 |diff| > clip_value 时，近似为 |diff| - log(2)
+        - 否则精确计算 log(cosh(diff))
+        """
+        abs_diff = t.abs(diff)
+        # 分段计算
+        linear_region = abs_diff > self.clip_value
+        safe_diff = t.where(
+            linear_region,
+            abs_diff - np.log(2.0),  # log(cosh(x)) ≈ |x| - log(2) 当x→±∞
+            t.log(t.cosh(t.clamp(diff, -self.clip_value, self.clip_value)))  # 小值时精确计算
+        )
+        return safe_diff
+
+    def forward(self, insample: t.Tensor, freq: int,
+                forecast: t.Tensor, target: t.Tensor, mask: t.Tensor) -> t.Tensor:
+        # 确保所有张量在相同设备
+        forecast = forecast.to(target.device)
+        mask = mask.to(target.device)
+        
+        # 应用 Mask
+        valid_forecast = forecast * mask
+        valid_target = target * mask
+        diff = valid_forecast - valid_target
+        
+        # 计算加权 MSE
+        mse_numerator = t.sum(diff ** 2)
+        mse_denominator = t.sum(mask) + self.eps
+        mse_loss = mse_numerator / mse_denominator
+        
+        # 计算稳定的 Log-Cosh
+        log_cosh = self.safe_log_cosh(diff)
+        log_cosh_loss = t.sum(log_cosh * mask) / mse_denominator  # 与 MSE 共享分母
+        
+        # 混合损失
+        total_loss = self.alpha * mse_loss + (1 - self.alpha) * log_cosh_loss
+        
+        # 数值安全检查
+        if t.isnan(total_loss) or t.isinf(total_loss):
+            raise RuntimeError(f"损失值异常: mse={mse_loss.item()}, log_cosh={log_cosh_loss.item()}")
+        
+        return total_loss

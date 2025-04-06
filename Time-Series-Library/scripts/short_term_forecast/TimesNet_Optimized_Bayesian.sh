@@ -1,13 +1,17 @@
-export CUDA_VISIBLE_DEVICES=1
+export CUDA_VISIBLE_DEVICES=0
 
-model_name=Nonstationary_Transformer
+model_name=TimesNet
 
 python -u run.py \
   --task_name short_term_forecast \
   --is_training 1 \
+  --use_optim True \
+  --optim_method bayesian \
+  --n_trials 20 \
+  --optim_params 'train_epochs,batch_size,alpha' \
   --root_path ./dataset/m4 \
   --seasonal_patterns 'Monthly' \
-  --model_id m4_Monthly \
+  --model_id m4_Monthly_Opt_Bayesian \
   --model $model_name \
   --data m4 \
   --features M \
@@ -18,20 +22,24 @@ python -u run.py \
   --dec_in 1 \
   --c_out 1 \
   --batch_size 16 \
-  --d_model 512 \
-  --des 'Exp' \
+  --d_model 32 \
+  --d_ff 32 \
+  --top_k 5 \
+  --des 'Optimized Bayesian Exp' \
   --itr 1 \
   --learning_rate 0.001 \
-  --loss 'SMAPE' \
-  --p_hidden_dims 256 256 \
-  --p_hidden_layers 2
+  --loss 'AlphaMixLoss'
 
 python -u run.py \
   --task_name short_term_forecast \
   --is_training 1 \
+  --use_optim True \
+  --optim_method bayesian \
+  --n_trials 20 \
+  --optim_params 'train_epochs,batch_size,alpha' \
   --root_path ./dataset/m4 \
   --seasonal_patterns 'Yearly' \
-  --model_id m4_Yearly \
+  --model_id m4_Yearly_Opt_Bayesian \
   --model $model_name \
   --data m4 \
   --features M \
@@ -42,20 +50,24 @@ python -u run.py \
   --dec_in 1 \
   --c_out 1 \
   --batch_size 16 \
-  --d_model 512 \
-  --des 'Exp' \
+  --d_model 16 \
+  --d_ff 32 \
+  --top_k 5 \
+  --des 'Optimized Bayesian Exp' \
   --itr 1 \
   --learning_rate 0.001 \
-  --loss 'SMAPE' \
-  --p_hidden_dims 256 256 \
-  --p_hidden_layers 2
+  --loss 'AlphaMixLoss'
 
 python -u run.py \
   --task_name short_term_forecast \
   --is_training 1 \
+  --use_optim True \
+  --optim_method bayesian \
+  --n_trials 20 \
+  --optim_params 'train_epochs,batch_size,alpha' \
   --root_path ./dataset/m4 \
   --seasonal_patterns 'Quarterly' \
-  --model_id m4_Quarterly \
+  --model_id m4_Quarterly_Opt_Bayesian \
   --model $model_name \
   --data m4 \
   --features M \
@@ -66,44 +78,24 @@ python -u run.py \
   --dec_in 1 \
   --c_out 1 \
   --batch_size 16 \
-  --d_model 512 \
-  --des 'Exp' \
+  --d_model 64 \
+  --d_ff 64 \
+  --top_k 5 \
+  --des 'Optimized Bayesian Exp' \
   --itr 1 \
   --learning_rate 0.001 \
-  --loss 'SMAPE' \
-  --p_hidden_dims 256 256 \
-  --p_hidden_layers 2
+  --loss 'AlphaMixLoss'
 
 python -u run.py \
   --task_name short_term_forecast \
   --is_training 1 \
-  --root_path ./dataset/m4 \
-  --seasonal_patterns 'Weekly' \
-  --model_id m4_Weekly \
-  --model $model_name \
-  --data m4 \
-  --features M \
-  --e_layers 2 \
-  --d_layers 1 \
-  --factor 3 \
-  --enc_in 1 \
-  --dec_in 1 \
-  --c_out 1 \
-  --batch_size 16 \
-  --d_model 512 \
-  --des 'Exp' \
-  --itr 1 \
-  --learning_rate 0.001 \
-  --loss 'SMAPE' \
-  --p_hidden_dims 256 256 \
-  --p_hidden_layers 2
-
-python -u run.py \
-  --task_name short_term_forecast \
-  --is_training 1 \
+  --use_optim True \
+  --optim_method bayesian \
+  --n_trials 20 \
+  --optim_params 'train_epochs,batch_size,alpha' \
   --root_path ./dataset/m4 \
   --seasonal_patterns 'Daily' \
-  --model_id m4_Daily \
+  --model_id m4_Daily_Opt_Bayesian \
   --model $model_name \
   --data m4 \
   --features M \
@@ -114,20 +106,24 @@ python -u run.py \
   --dec_in 1 \
   --c_out 1 \
   --batch_size 16 \
-  --d_model 512 \
-  --des 'Exp' \
+  --d_model 16 \
+  --d_ff 16 \
+  --top_k 5 \
+  --des 'Optimized Bayesian Exp' \
   --itr 1 \
   --learning_rate 0.001 \
-  --loss 'SMAPE' \
-  --p_hidden_dims 256 256 \
-  --p_hidden_layers 2
+  --loss 'AlphaMixLoss'
 
 python -u run.py \
   --task_name short_term_forecast \
   --is_training 1 \
+  --use_optim True \
+  --optim_method bayesian \
+  --n_trials 20 \
+  --optim_params 'train_epochs,batch_size,alpha' \
   --root_path ./dataset/m4 \
-  --seasonal_patterns 'Hourly' \
-  --model_id m4_Hourly \
+  --seasonal_patterns 'Weekly' \
+  --model_id m4_Weekly_Opt_Bayesian \
   --model $model_name \
   --data m4 \
   --features M \
@@ -138,10 +134,38 @@ python -u run.py \
   --dec_in 1 \
   --c_out 1 \
   --batch_size 16 \
-  --d_model 512 \
-  --des 'Exp' \
+  --d_model 32 \
+  --d_ff 32 \
+  --top_k 5 \
+  --des 'Optimized Bayesian Exp' \
   --itr 1 \
   --learning_rate 0.001 \
-  --loss 'SMAPE' \
-  --p_hidden_dims 256 256 \
-  --p_hidden_layers 2
+  --loss 'AlphaMixLoss'
+
+python -u run.py \
+  --task_name short_term_forecast \
+  --is_training 1 \
+  --use_optim True \
+  --optim_method bayesian \
+  --n_trials 20 \
+  --optim_params 'train_epochs,batch_size,alpha' \
+  --root_path ./dataset/m4 \
+  --seasonal_patterns 'Hourly' \
+  --model_id m4_Hourly_Opt_Bayesian \
+  --model $model_name \
+  --data m4 \
+  --features M \
+  --e_layers 2 \
+  --d_layers 1 \
+  --factor 3 \
+  --enc_in 1 \
+  --dec_in 1 \
+  --c_out 1 \
+  --batch_size 16 \
+  --d_model 32 \
+  --d_ff 32 \
+  --top_k 5 \
+  --des 'Optimized Bayesian Exp' \
+  --itr 1 \
+  --learning_rate 0.001 \
+  --loss 'AlphaMixLoss'

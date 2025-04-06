@@ -2,7 +2,7 @@ from data_provider.data_factory import data_provider
 from data_provider.m4 import M4Meta
 from exp.exp_basic import Exp_Basic
 from utils.tools import EarlyStopping, adjust_learning_rate, visual
-from utils.losses import mape_loss, mase_loss, smape_loss
+from utils.losses import mape_loss, mase_loss, smape_loss, AlphaMixLoss
 from utils.m4_summary import M4Summary
 import torch
 import torch.nn as nn
@@ -49,6 +49,8 @@ class Exp_Short_Term_Forecast(Exp_Basic):
             return mase_loss()
         elif loss_name == 'SMAPE':
             return smape_loss()
+        elif loss_name == 'AlphaMixLoss':
+            return AlphaMixLoss()
 
     def train(self, setting):
         train_data, train_loader = self._get_data(flag='train')

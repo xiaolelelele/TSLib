@@ -97,6 +97,15 @@ if __name__ == '__main__':
     parser.add_argument('--lradj', type=str, default='type1', help='adjust learning rate')
     parser.add_argument('--use_amp', action='store_true', help='use automatic mixed precision training', default=False)
 
+    # optim
+    parser.add_argument('--use_optim', type=bool, default=False, help='whether to use hyperparameter optimization')
+    parser.add_argument('--optim_method', type=str, default='bayesian',
+                        help='optimization method: bayesian, tpe, smac, bohb')
+    parser.add_argument('--optim_params', type=str, default='train_epochs,batch_size,alpha',
+                        help='parameters to optimize, split by comma')
+    parser.add_argument('--n_trials', type=int, default=50, help='number of optimization trials')
+    parser.add_argument('--alpha', type=float, default=0.5, help='weight for AlphaMixLoss')
+
     # GPU
     parser.add_argument('--use_gpu', type=bool, default=True, help='use gpu')
     parser.add_argument('--gpu', type=int, default=0, help='gpu')
@@ -173,10 +182,90 @@ if __name__ == '__main__':
     else:
         Exp = Exp_Long_Term_Forecast
 
-    if args.is_training:
-        for ii in range(args.itr):
-            # setting record of experiments
+    if args.use_optim:
+        try:
+            from utils.optimizer import HyperOptimizer
+            setting = '{}_{}_{}_{}_ft{}_sl{}_ll{}_pl{}_dm{}_nh{}_el{}_dl{}_df{}_expand{}_dc{}_fc{}_eb{}_dt{}_{}_{}'.format(
+                    args.task_name,
+                    args.model_id,
+                    args.model,
+                    args.data,
+                    args.features,
+                    args.seq_len,
+                    args.label_len,
+                    args.pred_len,
+                    args.d_model,
+                    args.n_heads,
+                    args.e_layers,
+                    args.d_layers,
+                    args.d_ff,
+                    args.expand,
+                    args.d_conv,
+                    args.factor,
+                    args.embed,
+                    args.distil,
+                    args.des, 1)
+            optimizer = HyperOptimizer(args, Exp,setting)
+            best_params, best_score = optimizer.optimize()
+            
+            # 使用最优参数更新args
+            for param_name, param_value in best_params.items():
+                setattr(args, param_name, param_value)
+                
+            # 使用最优参数重新训练完整模型
+            setting = f'best_model_{args.model_id}_{args.batch_size}_{args.train_epochs}_{args.alpha}'
+            print(f'使用最优参数训练和测试模型: {setting}')
+            exp = Exp(args)
+            exp.train(setting)
+            exp.test(setting)
+            
+        except Exception as e:
+            print(f"优化过程出错: {str(e)}")
+        
+        finally:
+            if args.gpu_type == 'mps':
+                torch.backends.mps.empty_cache()
+            elif args.gpu_type == 'cuda':
+                torch.cuda.empty_cache()
+
+    else:
+        if args.is_training:
+            for ii in range(args.itr):
+                # setting record of experiments
+                exp = Exp(args)  # set experiments
+                setting = '{}_{}_{}_{}_ft{}_sl{}_ll{}_pl{}_dm{}_nh{}_el{}_dl{}_df{}_expand{}_dc{}_fc{}_eb{}_dt{}_{}_{}'.format(
+                    args.task_name,
+                    args.model_id,
+                    args.model,
+                    args.data,
+                    args.features,
+                    args.seq_len,
+                    args.label_len,
+                    args.pred_len,
+                    args.d_model,
+                    args.n_heads,
+                    args.e_layers,
+                    args.d_layers,
+                    args.d_ff,
+                    args.expand,
+                    args.d_conv,
+                    args.factor,
+                    args.embed,
+                    args.distil,
+                    args.des, ii)
+
+                print('>>>>>>>start training : {}>>>>>>>>>>>>>>>>>>>>>>>>>>'.format(setting))
+                exp.train(setting)
+
+                print('>>>>>>>testing : {}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.format(setting))
+                exp.test(setting)
+                if args.gpu_type == 'mps':
+                    torch.backends.mps.empty_cache()
+                elif args.gpu_type == 'cuda':
+                    torch.cuda.empty_cache()
+        else:
             exp = Exp(args)  # set experiments
+            ii = 0
             setting = '{}_{}_{}_{}_ft{}_sl{}_ll{}_pl{}_dm{}_nh{}_el{}_dl{}_df{}_expand{}_dc{}_fc{}_eb{}_dt{}_{}_{}'.format(
                 args.task_name,
                 args.model_id,
@@ -198,42 +287,9 @@ if __name__ == '__main__':
                 args.distil,
                 args.des, ii)
 
-            print('>>>>>>>start training : {}>>>>>>>>>>>>>>>>>>>>>>>>>>'.format(setting))
-            exp.train(setting)
-
             print('>>>>>>>testing : {}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.format(setting))
-            exp.test(setting)
+            exp.test(setting, test=1)
             if args.gpu_type == 'mps':
                 torch.backends.mps.empty_cache()
             elif args.gpu_type == 'cuda':
                 torch.cuda.empty_cache()
-    else:
-        exp = Exp(args)  # set experiments
-        ii = 0
-        setting = '{}_{}_{}_{}_ft{}_sl{}_ll{}_pl{}_dm{}_nh{}_el{}_dl{}_df{}_expand{}_dc{}_fc{}_eb{}_dt{}_{}_{}'.format(
-            args.task_name,
-            args.model_id,
-            args.model,
-            args.data,
-            args.features,
-            args.seq_len,
-            args.label_len,
-            args.pred_len,
-            args.d_model,
-            args.n_heads,
-            args.e_layers,
-            args.d_layers,
-            args.d_ff,
-            args.expand,
-            args.d_conv,
-            args.factor,
-            args.embed,
-            args.distil,
-            args.des, ii)
-
-        print('>>>>>>>testing : {}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.format(setting))
-        exp.test(setting, test=1)
-        if args.gpu_type == 'mps':
-            torch.backends.mps.empty_cache()
-        elif args.gpu_type == 'cuda':
-            torch.cuda.empty_cache()

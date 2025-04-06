@@ -1,0 +1,45 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: M4超参数优化",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "--task_name", "short_term_forecast",
+                "--is_training", "1",
+                "--use_optim", "True",
+                "--optim_method", "bayesian",
+                "--n_trials", "20",
+                "--optim_params", "train_epochs,batch_size,alpha",
+                "--root_path", "./dataset/m4",
+                "--seasonal_patterns", "Yearly",
+                "--model_id", "m4_Yearly_Opt_Bayesian",
+                "--model", "Transformer",  // 替换实际模型名
+                "--data", "m4",
+                "--features", "M",
+                "--e_layers", "2",
+                "--d_layers", "1",
+                "--factor", "3",
+                "--enc_in", "1",
+                "--dec_in", "1",
+                "--c_out", "1",
+                "--batch_size", "16",
+                "--d_model", "16",
+                "--d_ff", "32",
+                "--top_k", "5",
+                "--des", "Optimized Bayesian Exp",
+                "--itr", "1",
+                "--learning_rate", "0.001",
+                "--loss", "AlphaMixLoss"
+            ],
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "cwd": "${workspaceFolder}", // 关键：设置工作目录为项目根目录
+            "console": "integratedTerminal",
+            "justMyCode": false
+        }
+    ]
+}
