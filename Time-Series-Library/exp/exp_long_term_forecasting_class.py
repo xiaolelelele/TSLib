@@ -353,7 +353,7 @@ class Exp_Long_Term_Forecast_Class(Exp_Basic):
         print('test shape:', preds.shape, trues.shape,logits_list.shape)
         preds = preds.reshape(-1, preds.shape[-2], preds.shape[-1])
         trues = trues.reshape(-1, trues.shape[-2], trues.shape[-1])
-        logits_list = logits_list.reshape(logits_list.shape[0], logits_list.shape[1], logits_list.shape[2],3)
+        logits_list = logits_list.reshape(logits_list.shape[0], logits_list.shape[1], -1,3)
         print('test shape:', preds.shape, trues.shape)
 
         # result save
@@ -375,7 +375,7 @@ class Exp_Long_Term_Forecast_Class(Exp_Basic):
             dtw = np.array(dtw_list).mean()
         else:
             dtw = 'Not calculated'
-        logits_statistic = calculate_trend_agreement(logits_list, preds, is_logits=True)
+        logits_statistic = calculate_trend_agreement(trues, logits_list, is_logits=True)
         trend_statistic = calculate_trend_agreement(trues, preds)
         mae, mse, rmse, mape, mspe = metric(preds, trues)
         print('mse:{}, mae:{}, dtw:{},trend_statistic:{},logits_statistic{}'.format(mse, mae, dtw,trend_statistic,logits_statistic))

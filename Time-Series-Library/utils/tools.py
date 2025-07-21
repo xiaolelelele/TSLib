@@ -88,6 +88,9 @@ def calculate_trend_agreement(test_data, forecast_data,is_logits=False):
         
         forecast_trend = np.sign(np.diff(forecast_data, axis=1))
     test_trend = np.sign(np.diff(test_data, axis=1))
+    print("test_trend shape:", test_trend.shape)
+    print("forecast_trend shape:", forecast_trend.shape)
+    assert test_trend.shape == forecast_trend.shape, "test 和 forecast 的 shape 必须一致"
     # 趋势匹配：bool mask → (b, h-1, d)
     matches = (test_trend == forecast_trend)
 
