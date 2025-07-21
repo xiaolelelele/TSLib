@@ -86,11 +86,15 @@ class Model(nn.Module):
                                            configs.dropout)
         self.layer = configs.e_layers
         self.layer_norm = nn.LayerNorm(configs.d_model)
-        if self.task_name == 'long_term_forecast' or self.task_name == 'short_term_forecast':
+        if self.task_name == 'long_term_forecast' or self.task_name == 'short_term_forecast'or self.task_name == 'long_term_forecast_class':
             self.predict_linear = nn.Linear(
                 self.seq_len, self.pred_len + self.seq_len)
             self.projection = nn.Linear(
                 configs.d_model, configs.c_out, bias=True)
+            self.projection_trend = nn.Linear(
+                configs.d_model+configs.c_out, configs.c_out*3, bias=True)
+            self.act = F.gelu
+            self.dropout = nn.Dropout(0.5)
         if self.task_name == 'imputation' or self.task_name == 'anomaly_detection':
             self.projection = nn.Linear(
                 configs.d_model, configs.c_out, bias=True)
@@ -115,8 +119,16 @@ class Model(nn.Module):
         # TimesNet
         for i in range(self.layer):
             enc_out = self.layer_norm(self.model[i](enc_out))
-        # porject back
+        # porject back  # project back  #[B,T,d_model]-->[B,T,c_out]
         dec_out = self.projection(enc_out)
+        dec = dec_out[:, -self.pred_len:, :]  # [B, L, D]
+        delta_pred = dec[:, 1:, :] - dec[:, :-1, :]
+        
+        trend_in = enc_out[:, -self.pred_len+1:, :] # [B, T-1, C]
+        trend_in = torch.cat([trend_in, delta_pred], dim=-1)  # [B, T-1, C+D]
+        # apply activation and dropout
+        trend_in = self.dropout(self.act(trend_in))
+        logits = self.projection_trend(trend_in)# [B, T-1, D*3]
 
         # De-Normalization from Non-stationary Transformer
         dec_out = dec_out * \
@@ -125,7 +137,7 @@ class Model(nn.Module):
         dec_out = dec_out + \
                   (means[:, 0, :].unsqueeze(1).repeat(
                       1, self.pred_len + self.seq_len, 1))
-        return dec_out
+        return dec_out,logits
 
     def imputation(self, x_enc, x_mark_enc, x_dec, x_mark_dec, mask):
         # Normalization from Non-stationary Transformer
@@ -199,9 +211,9 @@ class Model(nn.Module):
         return output
 
     def forward(self, x_enc, x_mark_enc, x_dec, x_mark_dec, mask=None):
-        if self.task_name == 'long_term_forecast' or self.task_name == 'short_term_forecast':
-            dec_out = self.forecast(x_enc, x_mark_enc, x_dec, x_mark_dec)
-            return dec_out[:, -self.pred_len:, :]  # [B, L, D]
+        if self.task_name == 'long_term_forecast' or self.task_name == 'short_term_forecast'or self.task_name == 'long_term_forecast_class':
+            dec_out ,logits= self.forecast(x_enc, x_mark_enc, x_dec, x_mark_dec)
+            return dec_out[:, -self.pred_len:, :] ,logits # [B, L, D]
         if self.task_name == 'imputation':
             dec_out = self.imputation(
                 x_enc, x_mark_enc, x_dec, x_mark_dec, mask)

@@ -1,5 +1,5 @@
 from data_provider.data_loader import Dataset_ETT_hour, Dataset_ETT_minute, Dataset_Custom, Dataset_M4, PSMSegLoader, \
-    MSLSegLoader, SMAPSegLoader, SMDSegLoader, SWATSegLoader, UEAloader
+    MSLSegLoader, SMAPSegLoader, SMDSegLoader, SWATSegLoader, UEAloader,WeatherTrendLoader,Dataset_Custom_cla_fore
 from data_provider.uea import collate_fn
 from torch.utils.data import DataLoader
 
@@ -9,13 +9,15 @@ data_dict = {
     'ETTm1': Dataset_ETT_minute,
     'ETTm2': Dataset_ETT_minute,
     'custom': Dataset_Custom,
+    'custom_cla_fore': Dataset_Custom_cla_fore , 
     'm4': Dataset_M4,
     'PSM': PSMSegLoader,
     'MSL': MSLSegLoader,
     'SMAP': SMAPSegLoader,
     'SMD': SMDSegLoader,
     'SWAT': SWATSegLoader,
-    'UEA': UEAloader
+    'UEA': UEAloader,
+    'weather_trend': WeatherTrendLoader, #先分类后回归
 }
 
 
@@ -64,6 +66,7 @@ def data_provider(args, flag):
     else:
         if args.data == 'm4':
             drop_last = False
+        # 参数传入data_loader.Dataset_M4根据参数构造数据
         data_set = Data(
             args = args,
             root_path=args.root_path,
@@ -77,6 +80,7 @@ def data_provider(args, flag):
             seasonal_patterns=args.seasonal_patterns
         )
         print(flag, len(data_set))
+        # 使用 PyTorch 的 DataLoader 封装数据集，支持批量加载、是否打乱、并行加载等。
         data_loader = DataLoader(
             data_set,
             batch_size=batch_size,

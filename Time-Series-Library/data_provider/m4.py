@@ -23,7 +23,7 @@ from glob import glob
 
 import numpy as np
 import pandas as pd
-import patoolib
+# import patoolib
 from tqdm import tqdm
 import logging
 import os
@@ -77,7 +77,7 @@ class M4Dataset:
     frequencies: np.ndarray
     horizons: np.ndarray
     values: np.ndarray
-
+    # 传入原始数据  区分训练集和测试集
     @staticmethod
     def load(training: bool = True, dataset_file: str = '../dataset/m4') -> 'M4Dataset':
         """

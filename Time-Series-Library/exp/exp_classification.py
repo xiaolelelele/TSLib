@@ -36,8 +36,8 @@ class Exp_Classification(Exp_Basic):
         return data_set, data_loader
 
     def _select_optimizer(self):
-        # model_optim = optim.Adam(self.model.parameters(), lr=self.args.learning_rate)
-        model_optim = optim.RAdam(self.model.parameters(), lr=self.args.learning_rate)
+        model_optim = optim.Adam(self.model.parameters(), lr=self.args.learning_rate)
+        # model_optim = optim.RAdam(self.model.parameters(), lr=self.args.learning_rate)
         return model_optim
 
     def _select_criterion(self):
@@ -58,8 +58,13 @@ class Exp_Classification(Exp_Basic):
                 outputs = self.model(batch_x, padding_mask, None, None)
 
                 pred = outputs.detach().cpu()
-                loss = criterion(pred, label.long().squeeze().cpu())
-                total_loss.append(loss)
+                # loss = criterion(pred, label.long().squeeze().cpu()) #one step loss、
+                # 多步
+                loss = criterion(
+                    outputs.view(-1, outputs.size(-1)),   # [B*pred_len, num_class]
+                    label.view(-1).long()                 # [B*pred_len]
+                )
+                total_loss.append(loss.detach().cpu().item())
 
                 preds.append(outputs.detach())
                 trues.append(label)
@@ -68,10 +73,12 @@ class Exp_Classification(Exp_Basic):
 
         preds = torch.cat(preds, 0)
         trues = torch.cat(trues, 0)
-        probs = torch.nn.functional.softmax(preds)  # (total_samples, num_classes) est. prob. for each class and sample
-        predictions = torch.argmax(probs, dim=1).cpu().numpy()  # (total_samples,) int class index for each sample
+        # probs = torch.nn.functional.softmax(preds,dim=-1)  # (total_samples, num_classes) est. prob. for each class and sample
+        predictions = torch.argmax(preds, dim=-1).cpu().numpy()  # (total_samples,) int class index for each sample
         trues = trues.flatten().cpu().numpy()
-        accuracy = cal_accuracy(predictions, trues)
+        # print('predictions shape:', predictions.shape, 'trues shape:', trues.shape)
+        # print('predictions:', predictions[:30], 'trues:', trues[:30])
+        accuracy = cal_accuracy(predictions.flatten(), trues)
 
         self.model.train()
         return total_loss, accuracy
@@ -109,7 +116,14 @@ class Exp_Classification(Exp_Basic):
                 label = label.to(self.device)
 
                 outputs = self.model(batch_x, padding_mask, None, None)
-                loss = criterion(outputs, label.long().squeeze(-1))
+                # loss = criterion(outputs, label.long().squeeze(-1))
+                # print(outputs.shape, label.shape)
+                # print(outputs.view(-1, outputs.size(-1)).shape, label.view(-1).shape)
+                # 多步
+                loss = criterion(
+                    outputs.view(-1, outputs.size(-1)),   # [B*pred_len, num_class]
+                    label.view(-1).long()                 # [B*pred_len]
+                )
                 train_loss.append(loss.item())
 
                 if (i + 1) % 100 == 0:
@@ -121,7 +135,8 @@ class Exp_Classification(Exp_Basic):
                     time_now = time.time()
 
                 loss.backward()
-                nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=4.0)
+                # 暂时不用
+                # nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=4.0)
                 model_optim.step()
 
             print("Epoch: {} cost time: {}".format(epoch + 1, time.time() - epoch_time))
@@ -166,15 +181,20 @@ class Exp_Classification(Exp_Basic):
                 preds.append(outputs.detach())
                 trues.append(label)
 
+
         preds = torch.cat(preds, 0)
         trues = torch.cat(trues, 0)
-        print('test shape:', preds.shape, trues.shape)
 
-        probs = torch.nn.functional.softmax(preds)  # (total_samples, num_classes) est. prob. for each class and sample
-        predictions = torch.argmax(probs, dim=1).cpu().numpy()  # (total_samples,) int class index for each sample
+        # probs = torch.nn.functional.softmax(preds)# 原始代码为做其他分类问题需要注意查看
+        # probs = torch.nn.functional.softmax(preds,dim=-1)  # (total_samples, num_classes) est. prob. for each class and sample
+
+        predictions = torch.argmax(preds, dim=-1).cpu().numpy()  # (total_samples,) int class index for each sample
         trues = trues.flatten().cpu().numpy()
-        accuracy = cal_accuracy(predictions, trues)
-
+        accuracy = cal_accuracy(predictions.flatten(), trues)
+        # 修改：0标签占比
+        zero_array = np.zeros_like(predictions.flatten())
+        accuracy1111 = cal_accuracy(zero_array.flatten(), trues)
+        print(f"Zero Accuracy: {accuracy1111:.4%}")
         # result save
         folder_path = './results/' + setting + '/'
         if not os.path.exists(folder_path):

@@ -2,6 +2,7 @@ import argparse
 import os
 import torch
 import torch.backends
+from exp.exp_classify_forecasting import Exp_Classify_Forecast
 from exp.exp_long_term_forecasting import Exp_Long_Term_Forecast
 from exp.exp_imputation import Exp_Imputation
 from exp.exp_short_term_forecasting import Exp_Short_Term_Forecast
@@ -43,6 +44,7 @@ if __name__ == '__main__':
     parser.add_argument('--label_len', type=int, default=48, help='start token length')
     parser.add_argument('--pred_len', type=int, default=96, help='prediction sequence length')
     parser.add_argument('--seasonal_patterns', type=str, default='Monthly', help='subset for M4')
+    # 需要先试试 反归一化打开，看看实际预测效果
     parser.add_argument('--inverse', action='store_true', help='inverse output data', default=False)
 
     # inputation task
@@ -171,6 +173,8 @@ if __name__ == '__main__':
 
     if args.task_name == 'long_term_forecast':
         Exp = Exp_Long_Term_Forecast
+    elif args.task_name == 'classify_forecast':
+        Exp = Exp_Classify_Forecast
     elif args.task_name == 'short_term_forecast':
         Exp = Exp_Short_Term_Forecast
     elif args.task_name == 'imputation':
@@ -179,6 +183,9 @@ if __name__ == '__main__':
         Exp = Exp_Anomaly_Detection
     elif args.task_name == 'classification':
         Exp = Exp_Classification
+    elif args.task_name == 'long_term_forecast_class':
+        from exp.exp_long_term_forecasting_class import Exp_Long_Term_Forecast_Class
+        Exp = Exp_Long_Term_Forecast_Class
     else:
         Exp = Exp_Long_Term_Forecast
 

@@ -5,6 +5,7 @@ import torch
 import matplotlib.pyplot as plt
 import pandas as pd
 import math
+import torch.nn as nn
 
 plt.switch_backend('agg')
 
@@ -25,9 +26,76 @@ def adjust_learning_rate(optimizer, epoch, args):
     if epoch in lr_adjust.keys():
         lr = lr_adjust[epoch]
         for param_group in optimizer.param_groups:
+            # 将优化器中的学习率更新
             param_group['lr'] = lr
         print('Updating learning rate to {}'.format(lr))
 
+def compute_trend_loss(y_pred, y_true,scale):
+        """
+        直接映射logit作为趋势预测器
+        Compute the trend loss between y_pred and y_true.
+
+        Args:
+            y_pred (torch.Tensor): Predicted sequence, shape (batch_size, seq_len, num_features)
+            y_true (torch.Tensor): Ground truth sequence, shape (batch_size, seq_len, num_features)
+
+        Returns:
+            torch.Tensor: Scalar loss value
+        """
+        delta_pred = y_pred[:, 1:, :] - y_pred[:, :-1, :]
+        delta_true = y_true[:, 1:, :] - y_true[:, :-1, :]
+
+        # === 缩放差分值 ===
+        # mean = delta_pred.mean(dim=(0, 1), keepdim=True)  # shape (1, 1, D)
+        std = delta_pred.std(dim=(0, 1), keepdim=True) + 1e-6  # 防止除以0
+        delta_pred = delta_pred / std  # shape (B, T-1, D)
+
+        trend_true = torch.where(delta_true < 0, 0,
+                    torch.where(delta_true == 0, 1, 2)).long()
+        trend_logits = torch.stack([
+            -delta_pred,                          # class 0
+            torch.abs(delta_pred)+ 1e-6,        # class 1
+            delta_pred                            # class 2
+        ], dim=-1)
+        trend_logits = trend_logits.view(-1, 3)
+        trend_true = trend_true.view(-1)
+
+        loss = nn.CrossEntropyLoss()(trend_logits, trend_true)
+        return loss
+        
+def calculate_trend_agreement(test_data, forecast_data,is_logits=False):
+    """
+    计算二维数据（b, h）或三维数据（b, h, d）的趋势一致率。
+
+    参数：
+    - test_data: ndarray，真实值，shape = (b, h, d)
+    - forecast_data: ndarray，预测值，shape = (b, h, d)
+
+    返回：
+    - trend_agreement_ratio: float，趋势一致比例
+    """
+    if is_logits:
+        # 如果是logits，直接计算趋势一致率
+        forecast_trend = np.argmax(forecast_data, axis=-1)-1
+
+    else:
+        assert test_data.shape == forecast_data.shape, "test 和 forecast 的 shape 必须一致"
+        # 如果不是numpy数组，则转换为numpy数组
+        if not isinstance(test_data, np.ndarray):
+            test_data = test_data.to_numpy()
+            forecast_data = forecast_data.to_numpy()
+        # 计算差分后的趋势：(b, h-1, d)
+        
+        forecast_trend = np.sign(np.diff(forecast_data, axis=1))
+    test_trend = np.sign(np.diff(test_data, axis=1))
+    # 趋势匹配：bool mask → (b, h-1, d)
+    matches = (test_trend == forecast_trend)
+
+    total_trends = matches.size  # = b × (h-1) × d
+    matching_trends = np.sum(matches)
+
+    # print("总趋势数:", total_trends)
+    return matching_trends / total_trends
 
 class EarlyStopping:
     def __init__(self, patience=7, verbose=False, delta=0):

@@ -255,13 +255,16 @@ class Dataset_Custom(Dataset):
         border2 = border2s[self.set_type]
 
         if self.features == 'M' or self.features == 'MS':
+            # 取除第一列（通常是日期）以外的所有列作为输入特征
             cols_data = df_raw.columns[1:]
             df_data = df_raw[cols_data]
         elif self.features == 'S':
+            # 只取目标变量（self.target）这一列作为输入特征
             df_data = df_raw[[self.target]]
 
         if self.scale:
             train_data = df_data[border1s[0]:border2s[0]]
+            # 用训练数据拟合scaler，StandardScaler，防止于测试数据泄漏
             self.scaler.fit(train_data.values)
             data = self.scaler.transform(df_data.values)
         else:
@@ -269,6 +272,8 @@ class Dataset_Custom(Dataset):
 
         df_stamp = df_raw[['date']][border1:border2]
         df_stamp['date'] = pd.to_datetime(df_stamp.date)
+        # timeenc == 0：手动提取 [month, day, weekday, hour]，每行是一个时间点的时间特征。
+        # timeenc == 1：用 time_features 自动提取，特征种类和顺序由 freq 决定，最后 shape 也是 [时间步数, 特征数]。
         if self.timeenc == 0:
             df_stamp['month'] = df_stamp.date.apply(lambda row: row.month, 1)
             df_stamp['day'] = df_stamp.date.apply(lambda row: row.day, 1)
@@ -278,7 +283,7 @@ class Dataset_Custom(Dataset):
         elif self.timeenc == 1:
             data_stamp = time_features(pd.to_datetime(df_stamp['date'].values), freq=self.freq)
             data_stamp = data_stamp.transpose(1, 0)
-
+        # x 与 y 是同一个数据集  列相同
         self.data_x = data[border1:border2]
         self.data_y = data[border1:border2]
 
@@ -306,6 +311,157 @@ class Dataset_Custom(Dataset):
     def inverse_transform(self, data):
         return self.scaler.inverse_transform(data)
 
+class Dataset_Custom_cla_fore(Dataset):
+    def __init__(self, args, root_path, flag='train', size=None,
+                 features='S', data_path='ETTh1.csv',
+                 target='OT', scale=True, timeenc=0, freq='h', seasonal_patterns=None):
+        # size [seq_len, label_len, pred_len]
+        self.args = args
+        # info
+        if size == None:
+            self.seq_len = 24 * 4 * 4
+            self.label_len = 24 * 4
+            self.pred_len = 24 * 4
+        else:
+            self.seq_len = size[0]
+            self.label_len = size[1]
+            self.pred_len = size[2]
+        # init
+        assert flag in ['train', 'test', 'val']
+        type_map = {'train': 0, 'val': 1, 'test': 2}
+        self.set_type = type_map[flag]
+
+        self.features = features
+        self.target = target
+        self.scale = args.use_norm
+        self.timeenc = timeenc
+        self.freq = freq
+
+        self.root_path = root_path
+        self.data_path = data_path
+        self.__read_data__()
+
+    def __read_data__(self):
+        self.scaler = StandardScaler()
+        # self.scaler_delta_y = StandardScaler()
+        df_raw = pd.read_csv(os.path.join(self.root_path,
+                                          self.data_path))
+
+        '''
+        df_raw.columns: ['date', ...(other features), target feature]
+        '''
+        cols = list(df_raw.columns)
+        cols.remove(self.target)
+        cols.remove('date')
+        # 增加一列delta = y_future[1:] - y_future[:-1] 
+        df_raw['delta'] = df_raw[self.target].diff().abs().fillna(0)
+        cols.append('delta')
+        df_raw = df_raw[['date'] + cols + [self.target]]
+        num_train = int(len(df_raw) * 0.7)
+        num_test = int(len(df_raw) * 0.2)
+        num_vali = len(df_raw) - num_train - num_test
+        border1s = [0, num_train - self.seq_len, len(df_raw) - num_test - self.seq_len]
+        border2s = [num_train, num_train + num_vali, len(df_raw)]
+        border1 = border1s[self.set_type]
+        border2 = border2s[self.set_type]
+
+        if self.features == 'M' or self.features == 'MS':
+            cols_data = df_raw.columns[1:]
+            df_data = df_raw[cols_data]
+        elif self.features == 'S':
+            df_data = df_raw[[self.target]]
+        
+
+        # 归一化
+        if self.scale:
+            train_data = df_data[border1s[0]:border2s[0]]
+            self.scaler.fit(train_data.values)
+            data = self.scaler.transform(df_data.values)
+        else:
+            data = df_data.values
+
+        df_stamp = df_raw[['date']][border1:border2]
+        df_stamp['date'] = pd.to_datetime(df_stamp.date)
+        if self.timeenc == 0:
+            df_stamp['month'] = df_stamp.date.apply(lambda row: row.month, 1)
+            df_stamp['day'] = df_stamp.date.apply(lambda row: row.day, 1)
+            df_stamp['weekday'] = df_stamp.date.apply(lambda row: row.weekday(), 1)
+            df_stamp['hour'] = df_stamp.date.apply(lambda row: row.hour, 1)
+            data_stamp = df_stamp.drop(['date'], 1).values
+        elif self.timeenc == 1:
+            data_stamp = time_features(pd.to_datetime(df_stamp['date'].values), freq=self.freq)
+            data_stamp = data_stamp.transpose(1, 0)
+
+        self.data_x = data[border1:border2]
+        self.data_y = data[border1:border2]
+
+        if self.set_type == 0 and self.args.augmentation_ratio > 0:
+            self.data_x, self.data_y, augmentation_tags = run_augmentation_single(self.data_x, self.data_y, self.args)
+
+        self.data_stamp = data_stamp
+
+
+    def __len__(self):
+        return len(self.data_x) - self.seq_len - self.pred_len + 1
+    
+    # 对所有x（包含y）的反归一化
+    def inverse_transform(self, data):
+        return self.scaler.inverse_transform(data)
+    # 对y的归一化
+    def y_transform(self, data):
+        target_idx = -1
+        mean = self.scaler.mean_[target_idx]
+        std = self.scaler.scale_[target_idx]
+        data  = (data - mean) / std
+        return data
+    # 只计算y的反归一化
+    def inverse_y_transform(self, data):
+        target_idx = -1
+        mean = self.scaler.mean_[target_idx]
+        std = self.scaler.scale_[target_idx]
+        data_inv = data * std + mean
+        return data_inv
+    # 只计算delta_y的反归一化
+    def inverse_delta_y_transform(self, data):
+        target_idx = -2
+        mean = self.scaler.mean_[target_idx]
+        std = self.scaler.scale_[target_idx]
+        data_inv = data * std + mean
+        return data_inv
+
+    def __getitem__(self, index):
+        s_begin = index
+        s_end = s_begin + self.seq_len
+        r_begin = s_end 
+        r_end = r_begin + self.pred_len
+
+        # x特征包含了y
+        x_seq = self.data_x[s_begin:s_end]
+        y_seq = self.data_y[r_begin:r_end,-1]
+
+        # x_seq = self.data_x[index : index + L]               # (L, 11)
+        # y_seq = self.data_y[index : index + L]               # (L,)
+        y_future = self.data_y[r_begin:r_end,-1]  # (H+1,)
+        mag_future = self.data_y[r_begin:r_end,-2]  # (H+1,)
+
+        # 拼接 y_seq 进入输入特征
+        # x_seq_full = np.concatenate([x_seq, y_seq.reshape(-1, 1)], axis=1)  # (L, 12)
+
+        y0 = y_seq[-1]  # 当前时间点的 y 值，递推起点
+        # 构造标签
+        delta = y_future[1:] - y_future[:-1]          # (H,)
+        # delta在第0个位置加入 y_future[0]-y0
+        delta = np.insert(delta, 0, y_future[0] - y0)  # (H+1,)
+        trend_label = (np.sign(delta) + 1).astype(int)  # {-1,0,1} → {0,1,2}
+        
+
+        return (
+            torch.tensor(x_seq, dtype=torch.float32),   # x_seq
+            torch.tensor(y0, dtype=torch.float32),           # y_t
+            torch.tensor(y_future, dtype=torch.float32),     # y_true (regression)
+            torch.tensor(trend_label, dtype=torch.long),     # trend class
+            torch.tensor(mag_future, dtype=torch.float32),          # mag
+        )
 
 class Dataset_M4(Dataset):
     def __init__(self, args, root_path, flag='pred', size=None,
@@ -338,6 +494,7 @@ class Dataset_M4(Dataset):
             dataset = M4Dataset.load(training=True, dataset_file=self.root_path)
         else:
             dataset = M4Dataset.load(training=False, dataset_file=self.root_path)
+        # training_values 是一个二维数组，每一行是一个去除 NaN 后的时间序列。
         training_values = np.array(
             [v[~np.isnan(v)] for v in
              dataset.values[dataset.groups == self.seasonal_patterns]])  # split different frequencies
@@ -345,19 +502,28 @@ class Dataset_M4(Dataset):
         self.timeseries = [ts for ts in training_values]
 
     def __getitem__(self, index):
+        """
+            insample：输入窗口（历史窗口），长度为 seq_len。
+            insample_mask：输入窗口的有效掩码（有数据为1，无数据为0）。
+            outsample：输出窗口（标签+预测），长度为 label_len + pred_len。
+            outsample_mask：输出窗口的有效掩码。
+        """
         insample = np.zeros((self.seq_len, 1))
         insample_mask = np.zeros((self.seq_len, 1))
         outsample = np.zeros((self.pred_len + self.label_len, 1))
         outsample_mask = np.zeros((self.pred_len + self.label_len, 1))  # m4 dataset
 
+        # 随机选择一个时间序列
         sampled_timeseries = self.timeseries[index]
         cut_point = np.random.randint(low=max(1, len(sampled_timeseries) - self.window_sampling_limit),
                                       high=len(sampled_timeseries),
                                       size=1)[0]
 
+        # 构造输入窗口和掩码
         insample_window = sampled_timeseries[max(0, cut_point - self.seq_len):cut_point]
         insample[-len(insample_window):, 0] = insample_window
         insample_mask[-len(insample_window):, 0] = 1.0
+        # 构造输出窗口和掩码
         outsample_window = sampled_timeseries[
                            max(0, cut_point - self.label_len):min(len(sampled_timeseries), cut_point + self.pred_len)]
         outsample[:len(outsample_window), 0] = outsample_window
@@ -746,3 +912,80 @@ class UEAloader(Dataset):
 
     def __len__(self):
         return len(self.all_IDs)
+    
+
+class WeatherTrendLoader(Dataset):
+    """
+    用于weather_trend.csv的趋势分类任务数据集加载器。
+    - 特征为除date和trend外的所有列
+    - 标签为trend（倒数第二列）
+    - 支持与UEAloader类似的直接索引方式
+    """
+    def __init__(self, args, root_path, data_path='weather_trend.csv', seq_len=96, flag='train'):
+        self.args = args
+        self.root_path = root_path
+        self.data_path = data_path
+        self.seq_len = seq_len
+        self.flag = flag
+        self.scale = args.use_norm
+        self.max_seq_len = seq_len
+        self.class_names = [1,2,3]  # trend分类的标签为1,2,3
+
+        # 读入数据
+        df = pd.read_csv(os.path.join(root_path, data_path))
+        # # 丢弃最后一列（无用），trend为倒数第二列
+        # df = df.iloc[:, :-1]
+        # Swap the last two columns
+        df = df.iloc[:, list(range(df.shape[1] - 2)) + [df.shape[1] - 1, df.shape[1] - 2]]
+
+        # trend列名
+        trend_col = df.columns[-1]
+        # 特征列（去掉date和trend）
+        feature_cols = df.columns[1:-1]
+
+        # 划分数据集
+        num_train = int(len(df) * 0.7)
+        num_test = int(len(df) * 0.2)
+        num_vali = len(df) - num_train - num_test
+        border1s = [0, num_train - seq_len, len(df) - num_test - seq_len]
+        border2s = [num_train, num_train + num_vali, len(df)]
+        type_map = {'train': 0, 'val': 1, 'test': 2}
+        set_type = type_map[flag.lower()]
+        border1 = border1s[set_type]
+        border2 = border2s[set_type]
+
+        # 特征与标签
+        features = df[feature_cols].values
+        labels = df[trend_col].values
+
+        # 归一化
+        if self.scale:
+            self.scaler = StandardScaler()
+            self.scaler.fit(features[border1s[0]:border2s[0]])
+            features = self.scaler.transform(features)
+        else:
+            self.scaler = None
+
+        self.feature_df = df[feature_cols]
+        # self.class_names = df[trend_col]
+
+
+        # 滑窗采样
+        self.samples = []
+        for i in range(border1, border2 - seq_len - seq_len + 1):
+            x = features[i:i+seq_len]
+            # y = labels[i+seq_len-1]  # 取窗口最后一个时刻的trend作为标签
+            y = labels[i+seq_len:i+seq_len+seq_len]  # 取窗口最后一个时刻的trend作为标签
+            self.samples.append((x, y))
+
+    def __len__(self):
+        return len(self.samples)
+
+    def __getitem__(self, idx):
+        x, y = self.samples[idx]
+        return torch.tensor(x, dtype=torch.float32), torch.tensor(y, dtype=torch.long)
+
+    def inverse_transform(self, data):
+        if self.scaler is not None:
+            return self.scaler.inverse_transform(data)
+        return data
