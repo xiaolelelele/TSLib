@@ -1,0 +1,574 @@
+
+=== Training Parameters (20250314_202640) ===
+delta: 0.7203244934421581
+hidden_dim: 11
+epochs: 300
+batch_size: 29
+device: cpu
+shuffle_data: True
+timestamp: 2025-03-14 20:26:40
+
+=== Iteration 50 Results ===
+train_loss: 0.1618
+
+=== Iteration 100 Results ===
+train_loss: 0.0400
+
+=== Iteration 150 Results ===
+train_loss: 0.0132
+
+=== Iteration 200 Results ===
+train_loss: 0.0064
+
+=== Iteration 250 Results ===
+train_loss: 0.0047
+
+=== Iteration 300 Results ===
+train_loss: 0.0034
+mae: 1574.08251953125
+mape: 3.3852
+mse: 3899115.75
+rmse: 1974.6179
+
+=== Training Parameters (20250314_202640) ===
+delta: 0.0923385947687978
+hidden_dim: 13
+epochs: 355
+batch_size: 12
+device: cpu
+shuffle_data: True
+timestamp: 2025-03-14 20:26:45
+
+=== Iteration 50 Results ===
+train_loss: 0.0315
+
+=== Iteration 100 Results ===
+train_loss: 0.0054
+
+=== Iteration 150 Results ===
+train_loss: 0.0030
+
+=== Iteration 200 Results ===
+train_loss: 0.0022
+
+=== Iteration 250 Results ===
+train_loss: 0.0016
+
+=== Iteration 300 Results ===
+train_loss: 0.0011
+
+=== Iteration 350 Results ===
+train_loss: 0.0008
+mae: 1142.5413818359375
+mape: 2.6377
+mse: 2221031.5
+rmse: 1490.3126
+
+=== Training Parameters (20250314_202640) ===
+delta: 0.538816734003357
+hidden_dim: 22
+epochs: 425
+batch_size: 27
+device: cpu
+shuffle_data: True
+timestamp: 2025-03-14 20:26:59
+
+=== Iteration 50 Results ===
+train_loss: 0.0485
+
+=== Iteration 100 Results ===
+train_loss: 0.0077
+
+=== Iteration 150 Results ===
+train_loss: 0.0038
+
+=== Iteration 200 Results ===
+train_loss: 0.0031
+
+=== Iteration 250 Results ===
+train_loss: 0.0020
+
+=== Iteration 300 Results ===
+train_loss: 0.0016
+
+=== Iteration 350 Results ===
+train_loss: 0.0012
+
+=== Iteration 400 Results ===
+train_loss: 0.0009
+mae: 1221.9395751953125
+mape: 2.5899
+mse: 3216137.25
+rmse: 1793.3592
+
+=== Training Parameters (20250314_202640) ===
+delta: 0.8781174363909454
+hidden_dim: 22
+epochs: 308
+batch_size: 16
+device: cpu
+shuffle_data: True
+timestamp: 2025-03-14 20:27:09
+
+=== Iteration 50 Results ===
+train_loss: 0.0102
+
+=== Iteration 100 Results ===
+train_loss: 0.0034
+
+=== Iteration 150 Results ===
+train_loss: 0.0022
+
+=== Iteration 200 Results ===
+train_loss: 0.0014
+
+=== Iteration 250 Results ===
+train_loss: 0.0009
+
+=== Iteration 300 Results ===
+train_loss: 0.0007
+mae: 989.15087890625
+mape: 1.7838
+mse: 1790614.125
+rmse: 1338.1383
+
+=== Training Parameters (20250314_202640) ===
+delta: 0.5586898284457517
+hidden_dim: 8
+epochs: 342
+batch_size: 29
+device: cpu
+shuffle_data: True
+timestamp: 2025-03-14 20:27:19
+
+=== Iteration 50 Results ===
+train_loss: 0.1399
+
+=== Iteration 100 Results ===
+train_loss: 0.0395
+
+=== Iteration 150 Results ===
+train_loss: 0.0180
+
+=== Iteration 200 Results ===
+train_loss: 0.0120
+
+=== Iteration 250 Results ===
+train_loss: 0.0080
+
+=== Iteration 300 Results ===
+train_loss: 0.0060
+mae: 1880.0460205078125
+mape: 4.0311
+mse: 5849865.5
+rmse: 2418.6495
+
+=== Training Parameters (20250314_202640) ===
+delta: 0.9682615757193975
+hidden_dim: 23
+epochs: 394
+batch_size: 52
+device: cpu
+shuffle_data: True
+timestamp: 2025-03-14 20:27:25
+
+=== Iteration 50 Results ===
+train_loss: 0.1532
+
+=== Iteration 100 Results ===
+train_loss: 0.0265
+
+=== Iteration 150 Results ===
+train_loss: 0.0062
+
+=== Iteration 200 Results ===
+train_loss: 0.0035
+
+=== Iteration 250 Results ===
+train_loss: 0.0031
+
+=== Iteration 300 Results ===
+train_loss: 0.0027
+
+=== Iteration 350 Results ===
+train_loss: 0.0024
+mae: 1237.584228515625
+mape: 2.7948
+mse: 2624918.25
+rmse: 1620.1599
+
+=== Training Parameters (20250314_202640) ===
+delta: 0.8946066635038473
+hidden_dim: 4
+epochs: 325
+batch_size: 56
+device: cpu
+shuffle_data: True
+timestamp: 2025-03-14 20:27:31
+
+=== Iteration 50 Results ===
+train_loss: 1.0481
+
+=== Iteration 100 Results ===
+train_loss: 0.4128
+
+=== Iteration 150 Results ===
+train_loss: 0.1675
+
+=== Iteration 200 Results ===
+train_loss: 0.0968
+
+=== Iteration 250 Results ===
+train_loss: 0.0688
+
+=== Iteration 300 Results ===
+train_loss: 0.0401
+mae: 3983.075439453125
+mape: 8.9938
+mse: 27852794.0
+rmse: 5277.5746
+
+=== Training Parameters (20250314_202640) ===
+delta: 0.8781425034294131
+hidden_dim: 15
+epochs: 329
+batch_size: 14
+device: cpu
+shuffle_data: True
+timestamp: 2025-03-14 20:27:34
+
+=== Iteration 50 Results ===
+train_loss: 0.0202
+
+=== Iteration 100 Results ===
+train_loss: 0.0044
+
+=== Iteration 150 Results ===
+train_loss: 0.0031
+
+=== Iteration 200 Results ===
+train_loss: 0.0023
+
+=== Iteration 250 Results ===
+train_loss: 0.0016
+
+=== Iteration 300 Results ===
+train_loss: 0.0011
+mae: 1197.4569091796875
+mape: 2.6586
+mse: 2310537.25
+rmse: 1520.0451
+
+=== Training Parameters (20250314_202640) ===
+delta: 0.5331652849730171
+hidden_dim: 12
+epochs: 507
+batch_size: 61
+device: cpu
+shuffle_data: True
+timestamp: 2025-03-14 20:27:47
+
+=== Iteration 50 Results ===
+train_loss: 0.3216
+
+=== Iteration 100 Results ===
+train_loss: 0.0897
+
+=== Iteration 150 Results ===
+train_loss: 0.0442
+
+=== Iteration 200 Results ===
+train_loss: 0.0194
+
+=== Iteration 250 Results ===
+train_loss: 0.0164
+
+=== Iteration 300 Results ===
+train_loss: 0.0091
+
+=== Iteration 350 Results ===
+train_loss: 0.0064
+
+=== Iteration 400 Results ===
+train_loss: 0.0055
+
+=== Iteration 450 Results ===
+train_loss: 0.0048
+
+=== Iteration 500 Results ===
+train_loss: 0.0044
+mae: 1601.5140380859375
+mape: 3.6738
+mse: 3978899.75
+rmse: 1994.7180
+
+=== Training Parameters (20250314_202640) ===
+delta: 0.8346256718973729
+hidden_dim: 24
+epochs: 305
+batch_size: 45
+device: cpu
+shuffle_data: True
+timestamp: 2025-03-14 20:27:53
+
+=== Iteration 50 Results ===
+train_loss: 0.1158
+
+=== Iteration 100 Results ===
+train_loss: 0.0201
+
+=== Iteration 150 Results ===
+train_loss: 0.0082
+
+=== Iteration 200 Results ===
+train_loss: 0.0050
+
+=== Iteration 250 Results ===
+train_loss: 0.0035
+
+=== Iteration 300 Results ===
+train_loss: 0.0026
+mae: 1356.4794921875
+mape: 3.1210
+mse: 2870324.75
+rmse: 1694.2033
+
+=== Training Parameters (20250314_202640) ===
+delta: 0.7481656543798394
+hidden_dim: 25
+epochs: 384
+batch_size: 63
+device: cpu
+shuffle_data: True
+timestamp: 2025-03-14 20:27:58
+
+=== Iteration 50 Results ===
+train_loss: 0.1056
+
+=== Iteration 100 Results ===
+train_loss: 0.0309
+
+=== Iteration 150 Results ===
+train_loss: 0.0131
+
+=== Iteration 200 Results ===
+train_loss: 0.0107
+
+=== Iteration 250 Results ===
+train_loss: 0.0038
+
+=== Iteration 300 Results ===
+train_loss: 0.0041
+
+=== Iteration 350 Results ===
+train_loss: 0.0028
+mae: 1429.7467041015625
+mape: 3.1596
+mse: 3738040.75
+rmse: 1933.4013
+
+=== Training Parameters (20250314_202640) ===
+delta: 0.44789352617590517
+hidden_dim: 11
+epochs: 572
+batch_size: 10
+device: cpu
+shuffle_data: True
+timestamp: 2025-03-14 20:28:04
+
+=== Iteration 50 Results ===
+train_loss: 0.0262
+
+=== Iteration 100 Results ===
+train_loss: 0.0048
+
+=== Iteration 150 Results ===
+train_loss: 0.0028
+
+=== Iteration 200 Results ===
+train_loss: 0.0020
+
+=== Iteration 250 Results ===
+train_loss: 0.0014
+
+=== Iteration 300 Results ===
+train_loss: 0.0010
+
+=== Iteration 350 Results ===
+train_loss: 0.0009
+
+=== Iteration 400 Results ===
+train_loss: 0.0005
+
+=== Iteration 450 Results ===
+train_loss: 0.0005
+
+=== Iteration 500 Results ===
+train_loss: 0.0003
+
+=== Iteration 550 Results ===
+train_loss: 0.0003
+mae: 1170.468994140625
+mape: 2.4281
+mse: 2263609.75
+rmse: 1504.5297
+
+=== Training Parameters (20250314_202640) ===
+delta: 0.13002857211827767
+hidden_dim: 22
+epochs: 305
+batch_size: 21
+device: cpu
+shuffle_data: True
+timestamp: 2025-03-14 20:28:34
+
+=== Iteration 50 Results ===
+train_loss: 0.0292
+
+=== Iteration 100 Results ===
+train_loss: 0.0057
+
+=== Iteration 150 Results ===
+train_loss: 0.0036
+
+=== Iteration 200 Results ===
+train_loss: 0.0024
+
+=== Iteration 250 Results ===
+train_loss: 0.0018
+
+=== Iteration 300 Results ===
+train_loss: 0.0014
+mae: 1189.283447265625
+mape: 2.5828
+mse: 2520998.25
+rmse: 1587.7652
+
+=== Training Parameters (20250314_202640) ===
+delta: 0.2655466593722262
+hidden_dim: 4
+epochs: 447
+batch_size: 16
+device: cpu
+shuffle_data: True
+timestamp: 2025-03-14 20:28:42
+
+=== Iteration 50 Results ===
+train_loss: 0.1346
+
+=== Iteration 100 Results ===
+train_loss: 0.0343
+
+=== Iteration 150 Results ===
+train_loss: 0.0175
+
+=== Iteration 200 Results ===
+train_loss: 0.0110
+
+=== Iteration 250 Results ===
+train_loss: 0.0075
+
+=== Iteration 300 Results ===
+train_loss: 0.0053
+
+=== Iteration 350 Results ===
+train_loss: 0.0037
+
+=== Iteration 400 Results ===
+train_loss: 0.0028
+mae: 1556.1822509765625
+mape: 2.8604
+mse: 4770807.5
+rmse: 2184.2178
+
+=== Training Parameters (20250314_202640) ===
+delta: 0.14672857490581015
+hidden_dim: 23
+epochs: 476
+batch_size: 38
+device: cpu
+shuffle_data: True
+timestamp: 2025-03-14 20:28:56
+
+=== Iteration 50 Results ===
+train_loss: 0.0700
+
+=== Iteration 100 Results ===
+train_loss: 0.0153
+
+=== Iteration 150 Results ===
+train_loss: 0.0045
+
+=== Iteration 200 Results ===
+train_loss: 0.0035
+
+=== Iteration 250 Results ===
+train_loss: 0.0025
+
+=== Iteration 300 Results ===
+train_loss: 0.0022
+
+=== Iteration 350 Results ===
+train_loss: 0.0017
+
+=== Iteration 400 Results ===
+train_loss: 0.0016
+
+=== Iteration 450 Results ===
+train_loss: 0.0014
+mae: 1199.7222900390625
+mape: 2.8306
+mse: 2359294.5
+rmse: 1535.9995
+
+=== Training Parameters (20250314_202640) ===
+delta: 0.4140559878195683
+hidden_dim: 15
+epochs: 508
+batch_size: 10
+device: cpu
+shuffle_data: True
+timestamp: 2025-03-14 20:29:05
+
+=== Iteration 50 Results ===
+train_loss: 0.0137
+
+=== Iteration 100 Results ===
+train_loss: 0.0044
+
+=== Iteration 150 Results ===
+train_loss: 0.0027
+
+=== Iteration 200 Results ===
+train_loss: 0.0017
+
+=== Iteration 250 Results ===
+train_loss: 0.0009
+
+=== Iteration 300 Results ===
+train_loss: 0.0006
+
+=== Iteration 350 Results ===
+train_loss: 0.0005
+
+=== Iteration 400 Results ===
+train_loss: 0.0004
+
+=== Iteration 450 Results ===
+train_loss: 0.0003
+
+=== Iteration 500 Results ===
+train_loss: 0.0003
+mae: 1150.5950927734375
+mape: 2.0425
+mse: 3037212.0
+rmse: 1742.7599
+
+=== Training Parameters (20250314_202640) ===
+delta: 0.5358964059155116
+hidden_dim: 17
+epochs: 499
+batch_size: 6
+device: cpu
+shuffle_data: True
+timestamp: 2025-03-14 20:29:32

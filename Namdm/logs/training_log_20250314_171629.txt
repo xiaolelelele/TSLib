@@ -1,0 +1,26 @@
+
+=== Training Parameters (20250314_171629) ===
+delta: 0.7203244934421581
+hidden_dim: 11
+epochs: 300
+batch_size: 29
+device: cpu
+timestamp: 2025-03-14 17:16:29
+
+=== Iteration 50 Results ===
+train_loss: 0.0893
+
+=== Iteration 100 Results ===
+train_loss: 0.0112
+
+=== Iteration 150 Results ===
+train_loss: 0.0063
+
+=== Iteration 200 Results ===
+train_loss: 0.0047
+
+=== Iteration 250 Results ===
+train_loss: 0.0047
+
+=== Iteration 300 Results ===
+train_loss: 0.0043

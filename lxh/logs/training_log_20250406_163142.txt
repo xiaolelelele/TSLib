@@ -1,0 +1,29 @@
+
+=== Training Parameters (20250406_163142) ===
+delta: 0.5
+epochs: 300
+batch_size: 128
+timestamp: 2025-04-06 16:31:42
+
+=== Iteration 50 Results ===
+train_loss: 0.4813
+
+=== Iteration 100 Results ===
+train_loss: 0.2620
+
+=== Iteration 150 Results ===
+train_loss: 0.1428
+
+=== Iteration 200 Results ===
+train_loss: 0.1127
+
+=== Iteration 250 Results ===
+train_loss: 0.1025
+
+=== Iteration 300 Results ===
+train_loss: 0.0814
+mae: 0.9787933230400085
+mape: 1.0058
+mse: 1.754982352256775
+rmse: 1.3248
+r2_score: 0.1714

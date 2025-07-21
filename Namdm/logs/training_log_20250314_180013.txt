@@ -1,0 +1,43 @@
+
+=== Training Parameters (20250314_180013) ===
+hidden_dim: 16
+epochs: 500
+batch_size: 32
+device: cpu
+shuffle_data: True
+alpha: 1
+timestamp: 2025-03-14 18:00:13
+
+=== Iteration 50 Results ===
+train_loss: 0.0786
+
+=== Iteration 100 Results ===
+train_loss: 0.0124
+
+=== Iteration 150 Results ===
+train_loss: 0.0048
+
+=== Iteration 200 Results ===
+train_loss: 0.0035
+
+=== Iteration 250 Results ===
+train_loss: 0.0029
+
+=== Iteration 300 Results ===
+train_loss: 0.0024
+
+=== Iteration 350 Results ===
+train_loss: 0.0020
+
+=== Iteration 400 Results ===
+train_loss: 0.0017
+
+=== Iteration 450 Results ===
+train_loss: 0.0014
+
+=== Iteration 500 Results ===
+train_loss: 0.0011
+mae: 1150.7227783203125
+mape: 2.3917
+mse: 2407117.5
+rmse: 1551.4888

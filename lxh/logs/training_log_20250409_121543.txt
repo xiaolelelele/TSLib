@@ -1,0 +1,17 @@
+
+=== Training Parameters (20250409_121543) ===
+delta: 0.9880512706418122
+epochs: 100
+batch_size: 32
+timestamp: 2025-04-09 12:15:43
+
+=== Iteration 50 Results ===
+train_loss: 0.3235
+
+=== Iteration 100 Results ===
+train_loss: 0.3088
+mae: 0.9922807216644287
+mape: 1.0194
+mse: 1.8973636627197266
+rmse: 1.3774
+r2_score: 0.1042
