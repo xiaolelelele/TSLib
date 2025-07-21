@@ -169,14 +169,8 @@ class DeltaMixLoss(nn.Module):
         self.mse = nn.MSELoss()
         self.mae = nn.L1Loss()
 
-    def log_cosh_loss(self, y_pred: torch.Tensor, y_true: torch.Tensor) -> torch.Tensor:
-        """计算Log-Cosh损失"""
-        diff = y_pred - y_true
-        return torch.mean(torch.log(torch.cosh(diff)))
-
     def forward(self, y_pred: torch.Tensor, y_true: torch.Tensor) -> torch.Tensor:
         mse_loss = self.mse(y_pred, y_true)
-        log_cosh_loss = self.log_cosh_loss(y_pred, y_true)
         mae_loss = self.mae(y_pred, y_true)
         return self.delta * mse_loss + (1 - self.delta) * mae_loss
 
@@ -327,7 +321,9 @@ if __name__ == "__main__":
         best_params = hyper_optimizer.optimize()
         print(f"Best parameters: {best_params}")
     elif args.optimization == 'Grid':
-        # 网格优化训练（示例代码，实际实现需要根据具体需求进行调整）
+        hyper_optimizer = HyperOptimizer(n_trials=20,Logger=Logger,train_test=train_test)
+        best_params = hyper_optimizer.optimize()
+        print(f"Best parameters: {best_params}")
         pass
     else:
         raise ValueError(f"Unsupported optimization method: {args.optimization}")
