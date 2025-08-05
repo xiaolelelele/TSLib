@@ -1,4 +1,4 @@
-export CUDA_VISIBLE_DEVICES=0
+export CUDA_VISIBLE_DEVICES=1
 
 model_name=TimesNet
 
@@ -7,7 +7,7 @@ python -u run.py \
   --is_training 1 \
   --root_path ./dataset/weather/ \
   --data_path weather.csv \
-  --model_id weather_96_96 \
+  --model_id weather_96_96_context \
   --model $model_name \
   --data custom \
   --features M \
@@ -24,5 +24,9 @@ python -u run.py \
   --d_ff 32 \
   --top_k 5 \
   --des 'Exp' \
-  --itr 1
+  --itr 1 \
+  --learning_rate 0.001 \
+  --trend_head context \
+  --train_epochs 20 \
+  # --lradj 'cosine' \
 

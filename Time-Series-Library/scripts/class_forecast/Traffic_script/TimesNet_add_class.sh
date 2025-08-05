@@ -1,13 +1,13 @@
-export CUDA_VISIBLE_DEVICES=0
+export CUDA_VISIBLE_DEVICES=3
 
 model_name=TimesNet
 
 python -u run.py \
   --task_name long_term_forecast_class \
-  --is_training 0 \
+  --is_training 1 \
   --root_path ./dataset/traffic/ \
   --data_path traffic.csv \
-  --model_id traffic_96_96 \
+  --model_id traffic_96_96_context \
   --model $model_name \
   --data custom \
   --features M \
@@ -27,6 +27,8 @@ python -u run.py \
   --itr 1 \
   --batch_size 16 \
   --learning_rate 0.001 \
-  --dropout 0.3 \
+  --dropout 0.1 \
+  --trend_head context \
+  --train_epochs 20 \
   --lradj 'cosine' \
 
