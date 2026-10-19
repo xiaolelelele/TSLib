@@ -86,6 +86,12 @@ if __name__ == '__main__':
                         help='down sampling method, only support avg, max, conv')
     parser.add_argument('--seg_len', type=int, default=96,
                         help='the length of segmen-wise iteration of SegRNN')
+    # trend head 分类头
+    parser.add_argument('--trend_head', type=str, default='linear',
+                    choices=['linear', 'mlp', 'conv', 'separate', 'context'],
+                    help='Trend head type')
+    # alpha
+    parser.add_argument('--trend_alpha', type=float, default=1.0, help='trend_alpha for AlphaMixLoss')
 
     # optimization
     parser.add_argument('--num_workers', type=int, default=10, help='data loader num workers')
@@ -186,6 +192,9 @@ if __name__ == '__main__':
     elif args.task_name == 'long_term_forecast_class':
         from exp.exp_long_term_forecasting_class import Exp_Long_Term_Forecast_Class
         Exp = Exp_Long_Term_Forecast_Class
+    elif args.task_name == 'short_term_forecast_class':
+        from exp.exp_short_term_forecasting_class import Exp_Short_Term_Forecast_Class
+        Exp = Exp_Short_Term_Forecast_Class
     else:
         Exp = Exp_Long_Term_Forecast
 

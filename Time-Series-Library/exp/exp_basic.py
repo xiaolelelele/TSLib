@@ -1,9 +1,9 @@
 import os
 import torch
-from models import Autoformer, DLinear_muti_classify, Transformer, TimesNet, Nonstationary_Transformer, DLinear, FEDformer, \
+from models import PDF, Autoformer, DLinear_muti_classify, Transformer, TimesNet, Nonstationary_Transformer, DLinear, FEDformer, \
     Informer, LightTS, Reformer, ETSformer, Pyraformer, PatchTST, MICN, Crossformer, FiLM, iTransformer, \
     Koopa, TiDE, FreTS, TimeMixer, TSMixer, SegRNN, MambaSimple, TemporalFusionTransformer, SCINet, PAttn, TimeXer, \
-    WPMixer, MultiPatchFormer,DLinear_muti_classify,Crossformer_muti_classify,lstm
+    WPMixer, MultiPatchFormer,DLinear_muti_classify,Crossformer_muti_classify,lstm,TCN
 from models import TrendMagnitudePredictor_lstm
 
 
@@ -44,7 +44,9 @@ class Exp_Basic(object):
             'TrendMagnitudePredictor':TrendMagnitudePredictor_lstm,
             'DLinear_muti_classify':DLinear_muti_classify,
             "Crossformer_muti_classify": Crossformer_muti_classify,
-            "lstm":lstm
+            "lstm":lstm,
+            'PDF': PDF,
+            "TCN": TCN,
         }
         if args.model == 'Mamba':
             print('Please make sure you have successfully installed mamba_ssm')

@@ -1,0 +1,90 @@
+{
+  "protocol_version": 1,
+  "output": "trend_lab_output",
+  "backbone": "linear",
+  "backbones": [
+    "linear",
+    "mlp"
+  ],
+  "hidden": 32,
+  "scales": [
+    1,
+    2,
+    4,
+    8
+  ],
+  "epsilon_quantile": 0.2,
+  "temperature_grid": [
+    0.5,
+    1.0,
+    2.0,
+    4.0
+  ],
+  "alpha_grid": [
+    0.0,
+    0.1,
+    0.3,
+    1.0,
+    3.0,
+    10.0
+  ],
+  "projection_steps": 40,
+  "max_rms": 0.5,
+  "methods": [
+    "base",
+    "difference",
+    "direction_head",
+    "projection",
+    "projection_single",
+    "residual",
+    "residual_direction",
+    "event",
+    "event_nohazard",
+    "last_value",
+    "last_slope",
+    "majority",
+    "last_direction"
+  ],
+  "training": {
+    "epochs": 40,
+    "patience": 8,
+    "batch_size": 64,
+    "learning_rate": 0.001,
+    "direction_weight": 0.1
+  },
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "smoke_seeds": [
+    0
+  ],
+  "data": {
+    "kind": "synthetic",
+    "scenarios": [
+      "persistent_trend",
+      "periodic_turn",
+      "noisy_multiscale",
+      "random_walk",
+      "skewed_increments"
+    ],
+    "scenario": "persistent_trend",
+    "seed": 20260927,
+    "length": 4096,
+    "channels": 3,
+    "lookback": 64,
+    "horizon": 16,
+    "split_ratios": [
+      0.6,
+      0.15,
+      0.1,
+      0.15
+    ],
+    "train_stride": 1,
+    "eval_stride": 16,
+    "noise": 0.1
+  }
+}

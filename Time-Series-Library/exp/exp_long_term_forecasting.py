@@ -1,6 +1,6 @@
 from data_provider.data_factory import data_provider
 from exp.exp_basic import Exp_Basic
-from utils.tools import EarlyStopping, adjust_learning_rate, visual
+from utils.tools import EarlyStopping, adjust_learning_rate, visual,calculate_trend_agreement
 from utils.metrics import metric
 import torch
 import torch.nn as nn
@@ -123,7 +123,6 @@ class Exp_Long_Term_Forecast(Exp_Basic):
                         train_loss.append(loss.item())
                 else:
                     outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)
-
                     f_dim = -1 if self.args.features == 'MS' else 0
                     outputs = outputs[:, -self.args.pred_len:, f_dim:]
                     batch_y = batch_y[:, -self.args.pred_len:, f_dim:].to(self.device)
@@ -253,11 +252,12 @@ class Exp_Long_Term_Forecast(Exp_Basic):
         else:
             dtw = 'Not calculated'
 
+        trend_statistic = calculate_trend_agreement(trues, preds)
         mae, mse, rmse, mape, mspe = metric(preds, trues)
-        print('mse:{}, mae:{}, dtw:{}'.format(mse, mae, dtw))
+        print('mse:{}, mae:{}, dtw:{},trend_statistic:{}'.format(mse, mae, dtw,trend_statistic))
         f = open("result_long_term_forecast.txt", 'a')
         f.write(setting + "  \n")
-        f.write('mse:{}, mae:{}, dtw:{}'.format(mse, mae, dtw))
+        f.write('mse:{}, mae:{}, dtw:{},trend_statistic:{}'.format(mse, mae, dtw,trend_statistic))
         f.write('\n')
         f.write('\n')
         f.close()

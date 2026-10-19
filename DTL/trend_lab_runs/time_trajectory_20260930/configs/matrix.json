@@ -1,0 +1,89 @@
+{
+  "datasets": [
+    {
+      "name": "nem",
+      "csv": "/home/lgc/TSLib/DTL/research/data/time_validation_20260930/prepared/nem_5min.csv",
+      "lookback": 288,
+      "horizon": 24,
+      "train_stride": 12,
+      "evaluation_stride": 6,
+      "frequency": "5min",
+      "grid_mode": "continuous",
+      "boundaries": [
+        "2025-01-01",
+        "2025-04-01",
+        "2025-04-15",
+        "2025-05-01",
+        "2025-05-15",
+        "2025-06-01"
+      ],
+      "history_policy": "complete"
+    },
+    {
+      "name": "carpark",
+      "csv": "/home/lgc/TSLib/DTL/research/data/time_validation_20260930/prepared/sg_carpark_15min.csv",
+      "lookback": 96,
+      "horizon": 16,
+      "train_stride": 4,
+      "evaluation_stride": 2,
+      "frequency": "15min",
+      "grid_mode": "native",
+      "boundaries": [
+        "2025-01-01",
+        "2025-04-01",
+        "2025-04-15",
+        "2025-05-01",
+        "2025-05-15",
+        "2025-06-01"
+      ],
+      "history_policy": "causal_ffill"
+    },
+    {
+      "name": "finland",
+      "csv": "/home/lgc/TSLib/DTL/research/data/time_validation_20260930/prepared/finland_traffic_15min.csv",
+      "lookback": 96,
+      "horizon": 16,
+      "train_stride": 4,
+      "evaluation_stride": 2,
+      "frequency": "15min",
+      "grid_mode": "native",
+      "boundaries": [
+        "2024-01-01",
+        "2024-10-01",
+        "2024-10-15",
+        "2024-11-01",
+        "2024-12-01",
+        "2025-01-01"
+      ],
+      "history_policy": "complete"
+    }
+  ],
+  "seeds": [
+    2024,
+    2025,
+    2026
+  ],
+  "backbones": [
+    "dlinear",
+    "itransformer"
+  ],
+  "lr": 0.001,
+  "batch": 64,
+  "epochs": 100,
+  "patience": 12,
+  "device": "cuda:0",
+  "lambda_grid": [
+    0.0,
+    0.001,
+    0.01,
+    0.1,
+    1.0
+  ],
+  "alpha_grid": [
+    0.0,
+    0.1,
+    1.0,
+    10.0
+  ],
+  "reference_root": "/home/lgc/TSLib/DTL/trend_lab_runs/time_trajectory_20260930/source/v2/reference"
+}

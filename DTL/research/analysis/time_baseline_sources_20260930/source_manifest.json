@@ -1,0 +1,68 @@
+{
+  "retrieved_client_date": "2026-09-30",
+  "commit": "a574b99e2e2673f7647b06ccda09de7d4b69f0e5",
+  "sources": [
+    {
+      "file": "loss__OrdinalCrossEntropyLoss.py",
+      "url": "https://raw.githubusercontent.com/Shi-hm/OCE-TS/a574b99e2e2673f7647b06ccda09de7d4b69f0e5/loss/OrdinalCrossEntropyLoss.py",
+      "sha256": "49d3aff0b9b3b4a43afd82f7223b0f1e5ad27803797344d52560b02a448f7503",
+      "bytes": 1228
+    },
+    {
+      "file": "loss__hl_gauss.py",
+      "url": "https://raw.githubusercontent.com/Shi-hm/OCE-TS/a574b99e2e2673f7647b06ccda09de7d4b69f0e5/loss/hl_gauss.py",
+      "sha256": "f29ffe02ce3e02e7c5a6d0a4f9a05706d93c2b871c6a100fc68806a05f957a1f",
+      "bytes": 10909
+    },
+    {
+      "file": "models__DLinear.py",
+      "url": "https://raw.githubusercontent.com/Shi-hm/OCE-TS/a574b99e2e2673f7647b06ccda09de7d4b69f0e5/models/DLinear.py",
+      "sha256": "9a43dae1d64955fc66184280a7652ebf196e15262469c7b83d6948244f85c9dc",
+      "bytes": 5667
+    },
+    {
+      "file": "data_provider__data_loader.py",
+      "url": "https://raw.githubusercontent.com/Shi-hm/OCE-TS/a574b99e2e2673f7647b06ccda09de7d4b69f0e5/data_provider/data_loader.py",
+      "sha256": "22f2da057c5a2909b0ad9d52545ca491f79a1c89a6565f0dc765cdabcc19c7a0",
+      "bytes": 9754
+    },
+    {
+      "file": "exp__exp_main.py",
+      "url": "https://raw.githubusercontent.com/Shi-hm/OCE-TS/a574b99e2e2673f7647b06ccda09de7d4b69f0e5/exp/exp_main.py",
+      "sha256": "5cff101135ed82c790c4e0300339d426711d91c2e1530ee7a9897f92b86d0f0e",
+      "bytes": 11970
+    },
+    {
+      "file": "run_longExp.py",
+      "url": "https://raw.githubusercontent.com/Shi-hm/OCE-TS/a574b99e2e2673f7647b06ccda09de7d4b69f0e5/run_longExp.py",
+      "sha256": "5f01085ad0cc397c20068d8e2fb343482f60ee0c40e185356fc0758dac26d129",
+      "bytes": 6170
+    },
+    {
+      "file": "LICENSE",
+      "url": "https://raw.githubusercontent.com/Shi-hm/OCE-TS/a574b99e2e2673f7647b06ccda09de7d4b69f0e5/LICENSE",
+      "sha256": "3a984a578f2d70cbfa7a9fbb8fef13ea7c9cca43d3d20f1994c27dcdb1af74fb",
+      "bytes": 1066
+    },
+    {
+      "file": "README.md",
+      "url": "https://raw.githubusercontent.com/Shi-hm/OCE-TS/a574b99e2e2673f7647b06ccda09de7d4b69f0e5/README.md",
+      "sha256": "cf286ef5d244e45c9d35f6b49536c266cb089e7eb55f83e95d46f45d5cc74cbe",
+      "bytes": 2933
+    },
+    {
+      "file": "oce_arxiv.html",
+      "url": "https://arxiv.org/html/2511.10200v1",
+      "sha256": "0d0568a0a64f3604de7d0a3a432b7488dba7a2ad965efe13166be8a16107a484",
+      "bytes": 635313
+    },
+    {
+      "file": "carets_arxiv.html",
+      "url": "https://arxiv.org/html/2511.09789v1",
+      "sha256": "f2cd4da9e748b49c1fb5dbe270e95489cf302e92fd04708ee211c021ba206006",
+      "bytes": 330802
+    }
+  ],
+  "AAAI_pdf": "https://ojs.aaai.org/index.php/AAAI/article/view/39831/43792",
+  "AAAI_pdf_access": "Read via web tool; direct transfer disconnected. ArXiv full PDF download stalled and was interrupted; arXiv full HTML successfully archived."
+}

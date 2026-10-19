@@ -2,13 +2,13 @@ export CUDA_VISIBLE_DEVICES=1
 
 model_name=iTransformer
 
-for alpha in 0.0 0.001 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 0.999 1.0;do
+for alpha in 0.0 ;do
 python -u run.py \
   --task_name long_term_forecast_class \
   --is_training 1 \
   --root_path ./dataset/ETT-small/ \
   --data_path ETTh2.csv \
-  --model_id ETTh2_96_96__$alpha \
+  --model_id aaa_ETTh2_96_96__$alpha \
   --model $model_name \
   --data ETTh2 \
   --features M \
@@ -25,10 +25,6 @@ python -u run.py \
   --d_model 128 \
   --d_ff 128 \
   --itr 1 \
-  --train_epochs 20 \
-  --patience 3 \
-  --learning_rate 0.001\
-  --lradj 'cosine' \
   --trend_alpha $alpha
 done
 

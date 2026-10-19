@@ -14,6 +14,7 @@ class ValueAndTrendModel(nn.Module):
 
     def forward(self, y_pred, y_true):
         """
+        mlp映射预测值的三分类logits,构造真实趋势标签
         y_pred: 预测值, shape (B, T, D)
         y_true: 真实值, shape (B, T, D)
         """
@@ -34,10 +35,10 @@ class ValueAndTrendModel(nn.Module):
         # 预测 logits
         logits = self.trend_head(d_pred_norm.unsqueeze(-1))  # (B, T-1, D, 3)
         # 查看logits学习情况
-        print("d_pred", d_pred[0, 0, :10])
-        print("d_pred_norm",d_pred_norm[0, 0, :10])
-        print("logits",logits[0, 0, :10,:])
-        print("label_true", label_true[0, 0, :10])
+        # print("d_pred", d_pred[0, 0, :10])
+        # print("d_pred_norm",d_pred_norm[0, 0, :10])
+        # print("logits",logits[0, 0, :10,:])
+        # print("label_true", label_true[0, 0, :10])
         # 计算交叉熵
         B, L, D, C = logits.shape
         logits_flat = logits.view(B * L * D, C)

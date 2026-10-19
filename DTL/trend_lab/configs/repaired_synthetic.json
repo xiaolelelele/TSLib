@@ -1,0 +1,79 @@
+{
+  "protocol_version": 2,
+  "backbone": "linear",
+  "hidden": 32,
+  "scales": [
+    1,
+    2,
+    4,
+    8
+  ],
+  "epsilon_quantile": 0.2,
+  "temperature_grid": [
+    0.5,
+    1.0,
+    2.0,
+    4.0
+  ],
+  "alpha_grid": [
+    0.0,
+    0.1,
+    0.3,
+    1.0,
+    3.0,
+    10.0
+  ],
+  "projection_steps": 400,
+  "max_rms": 0.5,
+  "training": {
+    "epochs": 40,
+    "patience": 8,
+    "batch_size": 64,
+    "learning_rate": 0.001
+  },
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "smoke_seeds": [
+    0
+  ],
+  "data": {
+    "kind": "synthetic",
+    "scenario": "persistent_trend",
+    "seed": 20260927,
+    "length": 4096,
+    "channels": 3,
+    "lookback": 64,
+    "horizon": 16,
+    "split_ratios": [
+      0.6,
+      0.15,
+      0.1,
+      0.15
+    ],
+    "train_stride": 1,
+    "eval_stride": 16,
+    "noise": 0.1
+  },
+  "device": "cpu",
+  "output": "trend_lab_repaired_output",
+  "earlystop_fraction": 0.5,
+  "slope_scale_floor": 0.02,
+  "projection_tolerance": 1e-05,
+  "direction_weights": [
+    0.01,
+    0.1
+  ],
+  "cosdir_weights": [
+    0.1,
+    1.0
+  ],
+  "posterior_betas": [
+    0,
+    0.1,
+    1,
+    10
+  ]
+}

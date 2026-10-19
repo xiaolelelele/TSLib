@@ -1,0 +1,96 @@
+{
+  "backbone": "dlinear",
+  "device": "cuda",
+  "hidden": 32,
+  "scales": [
+    1,
+    2,
+    4,
+    8
+  ],
+  "epsilon_quantile": 0.2,
+  "temperature_grid": [
+    0.5,
+    1.0,
+    2.0,
+    4.0
+  ],
+  "alpha_grid": [
+    0.0,
+    0.1,
+    0.3,
+    1.0,
+    3.0,
+    10.0
+  ],
+  "projection_steps": 40,
+  "max_rms": 0.5,
+  "methods": [
+    "base",
+    "difference",
+    "direction_head",
+    "projection",
+    "projection_single",
+    "residual",
+    "residual_direction",
+    "last_value",
+    "last_slope",
+    "majority",
+    "last_direction"
+  ],
+  "training": {
+    "epochs": 40,
+    "patience": 8,
+    "batch_size": 64,
+    "learning_rate": 0.001,
+    "direction_weight": 0.1,
+    "difference_weight": 1.0
+  },
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "smoke_seeds": [
+    0
+  ],
+  "data": {
+    "kind": "csv",
+    "csv_path": "/home/lgc/TSLib/DTL/trend_lab_fusion_runs/fusion_validation_20260927T155740Z/prepared/weather_deduplicated.csv",
+    "value_columns": [
+      "p (mbar)",
+      "T (degC)",
+      "Tpot (K)",
+      "Tdew (degC)",
+      "rh (%)",
+      "VPmax (mbar)",
+      "VPact (mbar)",
+      "VPdef (mbar)",
+      "sh (g/kg)",
+      "H2OC (mmol/mol)",
+      "rho (g/m**3)",
+      "wv (m/s)",
+      "max. wv (m/s)",
+      "wd (deg)",
+      "rain (mm)",
+      "raining (s)",
+      "SWDR (W/m\ufffd)",
+      "PAR (\ufffdmol/m\ufffd/s)",
+      "max. PAR (\ufffdmol/m\ufffd/s)",
+      "Tlog (degC)",
+      "OT"
+    ],
+    "time_column": "date",
+    "channels": 21,
+    "lookback": 96,
+    "horizon": 24,
+    "split_ratios": [
+      0.6,
+      0.15,
+      0.1,
+      0.15
+    ],
+    "train_stride": 4,
+    "eval_stride": 24
+  }
+}

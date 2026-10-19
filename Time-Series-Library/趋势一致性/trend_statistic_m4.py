@@ -1,8 +1,8 @@
 import pandas as pd
 
 # 读取真实值和预测值文件
-test_file = "dataset/m4/Yearly-test.csv"
-forecast_file = "m4_results/TimesNet/Yearly_forecast.csv"
+test_file = "dataset/m4/Monthly-test.csv"
+forecast_file = "m4_results/iTransformer/Monthly_forecast.csv"
 
 # 加载数据
 test_data = pd.read_csv(test_file, header=None)

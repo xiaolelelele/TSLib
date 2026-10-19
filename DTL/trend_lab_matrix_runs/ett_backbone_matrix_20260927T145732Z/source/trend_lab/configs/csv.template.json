@@ -1,0 +1,21 @@
+{
+  "output": "trend_lab_csv_output",
+  "backbone": "linear",
+  "hidden": 32,
+  "scales": [1, 2, 4, 8],
+  "methods": ["base", "direction_head", "projection", "projection_single", "residual", "residual_direction"],
+  "training": {"epochs": 40, "patience": 8, "batch_size": 64, "learning_rate": 0.001, "direction_weight": 0.1},
+  "seeds": [0, 1, 2, 3, 4],
+  "data": {
+    "kind": "csv",
+    "csv_path": "REPLACE_WITH_LOCAL_CSV_PATH",
+    "value_columns": ["REPLACE_WITH_NUMERIC_COLUMN"],
+    "time_column": "REPLACE_WITH_TIME_COLUMN",
+    "channels": 1,
+    "lookback": 64,
+    "horizon": 16,
+    "split_ratios": [0.6, 0.15, 0.1, 0.15],
+    "train_stride": 1,
+    "eval_stride": 16
+  }
+}

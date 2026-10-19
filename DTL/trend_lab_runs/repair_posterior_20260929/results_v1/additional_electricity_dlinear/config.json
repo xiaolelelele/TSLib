@@ -1,0 +1,91 @@
+{
+  "protocol_version": 2,
+  "cohort": "additional_channels",
+  "dataset": "electricity",
+  "group": "additional_electricity_dlinear",
+  "backbone": "dlinear",
+  "device": "cuda",
+  "hidden": 32,
+  "scales": [
+    1,
+    2,
+    4,
+    8
+  ],
+  "epsilon_quantile": 0.2,
+  "slope_scale_floor": 0.02,
+  "earlystop_fraction": 0.5,
+  "temperature_grid": [
+    0.5,
+    1.0,
+    2.0,
+    4.0
+  ],
+  "alpha_grid": [
+    0,
+    0.1,
+    0.3,
+    1,
+    3,
+    10
+  ],
+  "posterior_betas": [
+    0,
+    0.1,
+    1,
+    10
+  ],
+  "projection_steps": 400,
+  "projection_tolerance": 1e-05,
+  "max_rms": 0.5,
+  "direction_weights": [
+    0.01,
+    0.1
+  ],
+  "cosdir_weights": [
+    0.1,
+    1.0
+  ],
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "smoke_seeds": [
+    0
+  ],
+  "training": {
+    "epochs": 40,
+    "patience": 8,
+    "batch_size": 64,
+    "learning_rate": 0.001
+  },
+  "data": {
+    "kind": "csv",
+    "dataset": "electricity",
+    "csv_path": "/home/lgc/TSLib/DTL/trend_lab_runs/repair_posterior_20260929/prepared/electricity_cols8_15.csv",
+    "value_columns": [
+      "8",
+      "9",
+      "10",
+      "11",
+      "12",
+      "13",
+      "14",
+      "15"
+    ],
+    "time_column": "date",
+    "channels": 8,
+    "lookback": 96,
+    "horizon": 24,
+    "split_ratios": [
+      0.6,
+      0.15,
+      0.1,
+      0.15
+    ],
+    "train_stride": 4,
+    "eval_stride": 24
+  },
+  "smoke": false
+}

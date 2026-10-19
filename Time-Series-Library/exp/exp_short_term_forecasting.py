@@ -2,7 +2,7 @@ from data_provider.data_factory import data_provider
 from data_provider.m4 import M4Meta
 from exp.exp_basic import Exp_Basic
 from utils.tools import EarlyStopping, adjust_learning_rate, visual
-from utils.losses import mape_loss, mase_loss, smape_loss, AlphaMixLoss
+from utils.losses import mape_loss, mase_loss, smape_loss
 from utils.m4_summary import M4Summary
 import torch
 import torch.nn as nn
@@ -49,8 +49,6 @@ class Exp_Short_Term_Forecast(Exp_Basic):
             return mase_loss()
         elif loss_name == 'SMAPE':
             return smape_loss()
-        elif loss_name == 'AlphaMixLoss':
-            return AlphaMixLoss()
 
     def train(self, setting):
         train_data, train_loader = self._get_data(flag='train')
@@ -94,7 +92,11 @@ class Exp_Short_Term_Forecast(Exp_Basic):
                 batch_y = batch_y[:, -self.args.pred_len:, f_dim:].to(self.device)
 
                 batch_y_mark = batch_y_mark[:, -self.args.pred_len:, f_dim:].to(self.device)
+                loss_value_1 = mse(batch_x, self.args.frequency_map, outputs, batch_y, batch_y_mark)
+                print("loss_value_1", loss_value_1)
                 loss_value = criterion(batch_x, self.args.frequency_map, outputs, batch_y, batch_y_mark)
+                # print("batch_y_mark", batch_y_mark)
+                # print("self.args.frequency_map", self.args.frequency_map)
                 loss_sharpness = mse((outputs[:, 1:, :] - outputs[:, :-1, :]), (batch_y[:, 1:, :] - batch_y[:, :-1, :]))
                 loss = loss_value  # + loss_sharpness * 1e-5
                 train_loss.append(loss.item())

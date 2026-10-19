@@ -1,0 +1,32 @@
+{
+  "protocol": "recent_rolling_v1",
+  "datasets": [
+    {
+      "name": "smard_de",
+      "csv": "/home/lgc/TSLib/DTL/research/data/recent_hourly_20260930/smard_de_2023_2025.csv"
+    },
+    {
+      "name": "uscrn_crossville",
+      "csv": "/home/lgc/TSLib/DTL/research/data/recent_hourly_20260930/uscrn_crossville_2023_2025.csv"
+    }
+  ],
+  "years": [
+    2024,
+    2025
+  ],
+  "seeds": [
+    2024,
+    2025,
+    2026
+  ],
+  "backbones": [
+    "dlinear",
+    "itransformer"
+  ],
+  "epochs": 40,
+  "patience": 8,
+  "batch": 64,
+  "lr": 0.001,
+  "device": "cuda:0",
+  "reference_root": "/home/lgc/TSLib/DTL/trend_lab_runs/recent_rolling_20260930/source/v1/reference"
+}
